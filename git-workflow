@@ -1,0 +1,32 @@
+Commit then pull rebase/push
+
+# Commit all your changes
+
+git commit
+
+# Rebase to master
+git pull --rebase
+
+# Use tig to show history...  tig
+# If there are any conflicts, resolve them...see the instructions git provides when this happens
+# Push your changes
+git push
+
+
+Stash then pull rebase/commit/push
+# Your changes are not ready to commit but you want the latest from master
+
+# Stash your changes rebase to master, retest then commit and push
+
+git stash   # Your changes will be stashed locally
+git pull --rebase
+
+git stash pop  # Pop your changes that were stashed
+
+# Test and fix any conflicts identified
+..
+
+# Then commit and push
+git commit
+
+git push
