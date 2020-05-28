@@ -10,21 +10,20 @@ def main():
     grouped = df.groupby(["Handle", "Party"])["Tweet"].sum()
     df = grouped.reset_index()
 
-    labels = df.iloc[:, 1]
-    categories = df.iloc[:, 2]
+    party = df.iloc[:, 1]
+    tweets = df.iloc[:, 2]
 
-    category_train, category_test, label_train, label_test = train_test_split(categories, labels, test_size=0.3)
+    tweets_train, tweets_test, party_train, party_test = train_test_split(tweets, party, test_size=0.3)
     vectorizer = CountVectorizer()
-    counts = vectorizer.fit_transform(category_train.values)
+    counts = vectorizer.fit_transform(tweets_train.values)
 
     classifier = MultinomialNB()
-    target = label_train.values
+    target = party_train.values
 
     classifier.fit(counts, target)
-    prediction = classifier.predict(vectorizer.transform(category_test))
-    acc = accuracy_score(label_test, prediction)
+    prediction = classifier.predict(vectorizer.transform(tweets_test))
+    acc = accuracy_score(party_test, prediction)
 
-    print(len(prediction))
     print(acc)
 
 if __name__ == "__main__":
