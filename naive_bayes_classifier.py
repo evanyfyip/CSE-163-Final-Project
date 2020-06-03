@@ -6,7 +6,8 @@ from sklearn.metrics import accuracy_score
 import pickle
 import matplotlib.pyplot as plt
 
-def group_data(df):
+def group_data(file_name):
+    df = pd.read_csv('ExtractedTweets.csv')
     grouped = df.groupby(["Handle", "Party"])["Tweet"].sum()
     grouped = grouped.reset_index()
     return grouped
@@ -82,8 +83,7 @@ def matrix_display(party_test, predictions):
 
 
 def main():
-    extracted_tweets = pd.read_csv('ExtractedTweets.csv')
-    big_data = group_data(extracted_tweets)
+    big_data = group_data('ExtractedTweets.csv')
     naive_bayes(big_data)
 
 if __name__ == "__main__":
