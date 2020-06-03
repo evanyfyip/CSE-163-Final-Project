@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import accuracy_score
 import pickle
+import matplotlib.pyplot as plt
 
 def group_data(df):
     grouped = df.groupby(["Handle", "Party"])["Tweet"].sum()
@@ -27,8 +28,17 @@ def train_bayes(tweets_train, party_train, vectorizer):
     classifier = MultinomialNB()
     target = party_train.values
     classifier.fit(counts, target)
+    # Writing classifier to a pickle
+    save_classifier(classifier)
     return classifier
 
+def save_classifier(classifier):
+    """
+    Saves classifier into a pickle
+    """
+    with open('naive_classifier.pickle', 'wb') as f:
+        pickle.dump(classifier, f)
+    
 def classify_public_figures(classifier, vectorizer):
     with open('scraped_tweets.pickle', 'rb') as f:
         scraped_tweets = pickle.load(f)
