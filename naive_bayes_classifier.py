@@ -29,28 +29,30 @@ def train_bayes(tweets_train, party_train, vectorizer):
     classifier = MultinomialNB()
     target = party_train.values
     classifier.fit(counts, target)
-    # Writing classifier to a pickle
-    save_classifier(classifier)
+    # Writing model to a pickle
+    save_model(classifier, vectorizer)
     return classifier
 
-def save_classifier(classifier):
+def save_model(classifier, vectorizer):
     """
     Saves classifier into a pickle
     """
     with open('naive_classifier.pickle', 'wb') as f:
         pickle.dump(classifier, f)
+    with open('naive_vectorizer.pickle', 'wb') as f:
+        pickle.dump(vectorizer, f)
     
-def classify_public_figures(classifier, vectorizer):
-    with open('scraped_tweets.pickle', 'rb') as f:
-        scraped_tweets = pickle.load(f)
-    pub_figures = scraped_tweets.groupby(["username"])["tweet"].sum().reset_index()
-    public_figures = pub_figures.iloc[:, 0]
-    test_tweets = pub_figures.iloc[:, 1]
-    predictions = classifier.predict(vectorizer.transform(test_tweets))
-    map = {}
-    for i in range(len(public_figures)):
-        map[public_figures[i]] = predictions[i]
-    print(map)
+# def classify_public_figures(classifier, vectorizer):
+#     with open('scraped_tweets.pickle', 'rb') as f:
+#         scraped_tweets = pickle.load(f)
+#     pub_figures = scraped_tweets.groupby(["username"])["tweet"].sum().reset_index()
+#     public_figures = pub_figures.iloc[:, 0]
+#     test_tweets = pub_figures.iloc[:, 1]
+#     predictions = classifier.predict(vectorizer.transform(test_tweets))
+#     map = {}
+#     for i in range(len(public_figures)):
+#         map[public_figures[i]] = predictions[i]
+#     print(map)
 
 
 def matrix_display(party_test, predictions):
