@@ -40,7 +40,6 @@ def classify_public_figures(classifier, vectorizer):
         map[public_figures[i]] = predictions[i]
     print(map)
 
-
 def main():
     extracted_tweets = pd.read_csv('ExtractedTweets.csv')
     big_data = group_data(extracted_tweets)
