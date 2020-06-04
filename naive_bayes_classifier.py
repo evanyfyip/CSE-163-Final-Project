@@ -44,9 +44,11 @@ def naive_bayes(data):
     accuracy_map = {}  # a dictionary to store the accuracy scores of the model
 
     # loops through different test sample sizes to test against a trained model
+    con_fig, axs1 = plt.subplots(2, 4, figsize=(10, 8))  # confusion matrix fig
+    bar_fig, axs2 = plt.subplots(2, 4, figsize=(15, 12))  # bar plot figure
     for i in range(8):
         test_size = round(0.25 + i * 0.1, 2)
-        # seperating testing and training data accorind to test size
+        # separating testing and training data accorind to test size
         tweets_train, tweets_test, party_train,\
             party_test = train_test_split(tweets, party, test_size=test_size)
         # generating a vectorizer to handle string inputs
@@ -57,8 +59,26 @@ def naive_bayes(data):
         acc = accuracy_score(party_test, predictions)
         accuracy_map[test_size] = acc  # storing the accuracy score
         # calling functions to visualise each model according to testing size
-        matrix_display(party_test, predictions, test_size)
-        plot_accuracy_bar(party_test, predictions, test_size)
+        # generating subplot indices
+        if i < 4:
+            row = 0
+            col = i
+        else:
+            row = 1
+            col = i - 4
+        # Plotting subplots of confusion matrix and accuracy bar
+        matrix_display(party_test, predictions, test_size, axs1[row, col])
+        plot_accuracy_bar(party_test, predictions, test_size, axs2[row, col])
+    # Plotting and saving confusion matrix
+    con_fig.suptitle('NB Model Confusion Matrices with varying test sizes',
+                     fontsize=20)
+    con_fig.tight_layout()  # tight layout
+    con_fig.savefig("confusion_matrix.png")
+    # Plotting and saving bar plot
+    bar_fig.suptitle('NB Model Accuracy Bar plots with varying test sizes',
+                     fontsize=20)
+    bar_fig.tight_layout(rect=[0, 0.03, 1, 0.95])
+    bar_fig.savefig("accuracy_bar.png")
 
     # creating a new dataframe that stores accuracy scores
     accuracy_df = pd.DataFrame(list(accuracy_map.items()),
@@ -70,10 +90,10 @@ def naive_bayes(data):
     plt.savefig("accuracy_by_test_size.png")
 
 
-def train_bayes(tweets_train, party_train, vectorizer, test_size):
+def train_bayes(tweets_train, party_train, vectorizer):
     '''
     This function trains a multinomial naive bayes classifier model.
-    It takes training data and training labers, and the vectorizer
+    It takes training data and training labels, and the vectorizer
     to handle strings, as parameters. It returns a trained classifier
     based on the training data/labels given.
     '''
@@ -101,7 +121,7 @@ def save_model(classifier, vectorizer):
         pickle.dump(vectorizer, f)
 
 
-def matrix_display(party_test, predictions, test_size):
+def matrix_display(party_test, predictions, test_size, ax):
     '''
     This function takes true labels and the predictions from the data
     used as parameters, to test the naive bayes classifier,
@@ -111,28 +131,23 @@ def matrix_display(party_test, predictions, test_size):
     party_labels = ['Democrat', 'Republican']
     c_matrix = confusion_matrix(party_test, predictions, party_labels)
 
-    # generate the plot
-    fig = plt.figure(figsize=(7, 7))
-    ax = fig.add_subplot(111)
-    plt.title('Naive Bayes Model Confusion Matrix test-size '
-              + '(' + str(test_size) + ')')
+    # Generating plot labels and confusion matrix
+    ax.set_title('test-size '
+                 + '(' + str(test_size) + ')', pad=15)
     ax.set_xticklabels([''] + party_labels)
-    ax.set_yticklabels([''] + party_labels)
-    ax.ylabel = 'True Party'
-    ax.xlabel = 'Models Predicted Party'
+    ax.set_yticklabels([''] + party_labels, rotation=90, va='center')
+    ax.set_ylabel('True Party')
+    ax.set_xlabel('Models Predicted Party')
     ax.matshow(c_matrix, cmap='BuPu')
-    plt.xlabel('Predicted Party')
-    plt.ylabel('Actual Party')
 
     # place text for the number of correct and incorrect predictions
     for i in range(c_matrix.shape[0]):
         for j in range(c_matrix.shape[1]):
             ax.text(j, i, str(c_matrix[i, j]), ha="center",
                     va="center", color="black")
-    plt.savefig("test_size_" + str(test_size) + ".png")
 
 
-def plot_accuracy_bar(party_test, predictions, test_size):
+def plot_accuracy_bar(party_test, predictions, test_size, ax):
     """
     Saves and plots the accuracy bar plot of
     the test data and the political affiliation predictions.
@@ -174,7 +189,7 @@ def plot_accuracy_bar(party_test, predictions, test_size):
     x = np.arange(len(labels))  # the label locations
     width = 0.35  # the width of the bars
 
-    fig, ax = plt.subplots(figsize=(8, 5))
+    # Plotting bars
     rects1 = ax.bar(x - width/2, correct, width, label='Correct Prediction')
     rects2 = ax.bar(x + width/2, incorrect, width,
                     label='Incorrect Prediction')
@@ -182,20 +197,15 @@ def plot_accuracy_bar(party_test, predictions, test_size):
     # Add some text for labels, title and custom x-axis tick labels, etc.
     ax.set_ylabel('Tweets')
     ax.set_xlabel('Political affiliation')
-    ax.set_title('NB model political prediction accuracy bar test-size '
+    ax.set_title('test-size '
                  + '(' + str(test_size) + ')')
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
-    ax.legend(loc='upper right')
+    ax.legend(loc='center right')
+
     # Generating bar labels
     autolabel(rects1, ax)
     autolabel(rects2, ax)
-    # setting layout
-    fig.tight_layout()
-
-    # plt.show()
-    # Saving the figure
-    fig.savefig('bar_accuracy_' + str(test_size) + '.png')
 
 
 def autolabel(rects, ax):
