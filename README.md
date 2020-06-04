@@ -10,6 +10,9 @@ Files: ExtractedTweets.csv, naive_bayes_classifier.py,
 classify_public_figures.py, scraped_tweets.pickle,
 tweet_scraping_legacy.py
 
+**NOTE**
+This specification assumes the user has the standard cse163 environment.
+
 ExtractedTweets.csv:
 CSV file containing extracted tweets from select politicians.
 It has three columns: handle, party, and tweet. The dataset was
@@ -29,6 +32,13 @@ It also saves the classifier constructed from a 0.25 test-train
 split, as a pickle. This classifier is used in classify_public_figures.py
 
 tweet_scraping_legacy.py:
+**NOTE**
+tweet_scraping_legacy.py is no longer functional as of June 1st, 2020.
+There was an update to Twitter effective as of the date above that
+permanently disabled accessing the "legacy" version of twitter.
+This has made scraping tweets from twitter a significantly more challenging
+task for all future attempts. The following describes the previously functional code:
+
 This file contains functions that scrape tweets from twitter.com from
 various public figures and save these tweets and the usernames of the tweeters
 to a Pandas dataframe in scraped_tweets.pickle. This pickle will be in the
