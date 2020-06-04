@@ -1,8 +1,12 @@
-# Evan Yip, Cooper Chia, Walker Azam
-# CSE 163
-# Runs Naive Bayes model on web scraped tweets data
-# 6/3/2020
+"""
+Evan Yip, Cooper Chia, Walker Azam
+CSE 163 Final Project
 
+This file contains functions to runs Naive Bayes model
+on web scraped tweets data to predict their political
+affiliation. The model used is from 0.25 test-train split
+6/3/2020
+"""
 import pickle
 
 
@@ -15,7 +19,7 @@ def classify_public_figures():
     """
     with open('naive_vectorizer.pickle', 'rb') as f:
         vectorizer = pickle.load(f)
-    # Loading the classifier
+    # Loading the classifier (0.25 test-train split)
     with open('naive_classifier.pickle', 'rb') as f:
         classifier = pickle.load(f)
     # Loading our web scraped tweets
