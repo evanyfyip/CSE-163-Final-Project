@@ -5,6 +5,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import accuracy_score
 import pickle
 import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
 
 def group_data(file_name):
     df = pd.read_csv('ExtractedTweets.csv')
@@ -15,16 +17,21 @@ def group_data(file_name):
 def naive_bayes(data):
     party = data.loc[:, "Party"]
     tweets = data.loc[:, "Tweet"]
-    for i in range(3):
-        test_size = 0.25 + i * 0.05
+    accuracy_map = {}
+    for i in range(8):
+        test_size = round(0.25 + i * 0.1, 2)
         tweets_train, tweets_test, party_train, party_test = train_test_split(tweets, party, test_size=test_size)
         vectorizer = CountVectorizer()
         classifier = train_bayes(tweets_train, party_train, vectorizer)
         predictions = classifier.predict(vectorizer.transform(tweets_test))
         acc = accuracy_score(party_test, predictions)
-        print("Test Accuracy: " + str(acc))
+        accuracy_map[test_size] = acc
         matrix_display(party_test, predictions, test_size)
-    # classify_public_figures(classifier, vectorizer)
+    accuracy_df = pd.DataFrame(list(accuracy_map.items()), columns = ["Test Size", "Accuracy"])
+    print(accuracy_df)
+    sns.relplot(x="Test Size", y="Accuracy", data=accuracy_df)
+    plt.title("Accuracy vs. Test Size")
+    plt.savefig("accuracy_by_test_size.png")
 
 def train_bayes(tweets_train, party_train, vectorizer):
     counts = vectorizer.fit_transform(tweets_train.values)
@@ -70,7 +77,7 @@ def matrix_display(party_test, predictions, test_size):
     for i in range(c_matrix.shape[0]):
         for j in range(c_matrix.shape[1]):
             ax.text(j, i, str(c_matrix[i, j]), ha="center", va="center", color="black")
-    plt.savefig("Test Size: " + str(test_size) + ".png")
+    plt.savefig("test_size_" + str(test_size) + ".png")
 
 
 def main():
