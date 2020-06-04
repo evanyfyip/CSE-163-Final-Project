@@ -1,11 +1,18 @@
+# Evan Yip, Cooper Chia, Walker Azam
+# CSE 163
+# Runs Naive Bayes model on web scraped tweets data
+# 6/3/2020
+
 import pickle
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics import accuracy_score
 
 
 def classify_public_figures():
+    """
+    Tests the classifier and vectorizer Naive Bayes Model
+    on the web scraped tweets of public figures, utilizing
+    the stored pickle files. Prints out the political
+    affilitation predictions
+    """
     with open('naive_vectorizer.pickle', 'rb') as f:
         vectorizer = pickle.load(f)
     # Loading the classifier
@@ -14,19 +21,29 @@ def classify_public_figures():
     # Loading our web scraped tweets
     with open('scraped_tweets.pickle', 'rb') as f:
         scraped_tweets = pickle.load(f)
-    pub_figures = scraped_tweets.groupby(["username"])["tweet"].sum().reset_index()
+    # Grouping tweet data by username and aggregating the sum
+    pub_figures = scraped_tweets.groupby(["username"])["tweet"].sum()
+    pub_figures = pub_figures.reset_index()
+    # Retrieving public figures usernames
     public_figures = pub_figures.iloc[:, 0]
+    # retrieving tweets
     test_tweets = pub_figures.iloc[:, 1]
+    # Vectorizing test tweets
     vector = vectorizer.transform(test_tweets)
+    # Predicting features
     predictions = classifier.predict(vector)
     print(classifier.predict_proba(vector))
+    # initializing map dictionary
     map = {}
     for i in range(len(public_figures)):
         map[public_figures[i]] = predictions[i]
+    # printing prediction output
     print(map)
+
 
 def main():
     classify_public_figures()
+
 
 if __name__ == "__main__":
     main()
