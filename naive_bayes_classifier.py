@@ -34,9 +34,15 @@ def naive_bayes(data):
     This function takes a dataframe containing tweets and party affiliation
     from an imported file. It generates 8 different naive bayes models
     according to different test sizes and generates multiple plots to
-    visualise their effectiveness in prediction. It also saves a plot
+    visualise their effectiveness in prediction. These plots are saved to
+    confusion_matrix.png and accuracy_bar.png. It also saves a plot
     comparing all model's accuracy scores in a plot called
     accuracy_by_test_size.png.
+    Parameters:
+        data: a pandas data frame containing tweets and party affiliation
+            columns
+    Returns:
+        None
     '''
     # seperating labels and tweets
     party = data.loc[:, "Party"]
@@ -90,12 +96,19 @@ def naive_bayes(data):
     plt.savefig("accuracy_by_test_size.png")
 
 
-def train_bayes(tweets_train, party_train, vectorizer):
+def train_bayes(tweets_train, party_train, vectorizer, test_size):
     '''
     This function trains a multinomial naive bayes classifier model.
     It takes training data and training labels, and the vectorizer
-    to handle strings, as parameters. It returns a trained classifier
-    based on the training data/labels given.
+    to handle strings and the test_size, as parameters. It returns a trained
+    classifier based on the training data/labels given.
+    Parameters:
+        tweets_train: the features -- tweets training set
+        party_train: the labels of the training set
+        vectorizer: countvectorizer object
+        test_size: a double of the test train split test size
+    Returns:
+        classifier: trained classifier based on training data/labels
     '''
     counts = vectorizer.fit_transform(tweets_train.values)
     classifier = MultinomialNB()
@@ -114,6 +127,8 @@ def save_model(classifier, vectorizer):
     Parameters:
         classifer: naive bayes classifier object
         vectorizer: Count vectorizer object
+    Returns:
+        None
     """
     with open('naive_classifier.pickle', 'wb') as f:
         pickle.dump(classifier, f)
@@ -123,10 +138,17 @@ def save_model(classifier, vectorizer):
 
 def matrix_display(party_test, predictions, test_size, ax):
     '''
-    This function takes true labels and the predictions from the data
-    used as parameters, to test the naive bayes classifier,
+    This function takes true labels, predictions, test_size, and an axes
+    object used as parameters, to test the naive bayes classifier,
     and creates a confusion matrix showing the accuracy of the classifier.
-    It saves the confusion matrix under a png file(no returns).
+    Parameters:
+        party_test: a pandas series of the labels of the test data
+        predictions: a numpy array of the predictions of the labels
+            of the test data
+        test_size: a double that specifies the test size
+        ax: a matplotlib axes object which matrix display will plot to
+    Returns:
+        None
     '''
     party_labels = ['Democrat', 'Republican']
     c_matrix = confusion_matrix(party_test, predictions, party_labels)
@@ -155,6 +177,10 @@ def plot_accuracy_bar(party_test, predictions, test_size, ax):
         party_test: a pandas series of the labels of the test data
         predictions: a numpy array of the predictions of the labels
             of the test data
+        test_size: a double that specifies the test size
+        ax: a matplotlib axes object which plot_accuracy_bar will plot to
+    Returns:
+        None
     """
     # Converting party_test and predictions into dataframes
     pred = pd.DataFrame(predictions, columns=['Predictions'])
@@ -229,8 +255,11 @@ def autolabel(rects, ax):
 
 
 def main():
+    # reading csv to pandas dataframe
     extracted_tweets = pd.read_csv('ExtractedTweets.csv')
+    # Grouping the data
     big_data = group_data(extracted_tweets)
+    # Running the naive bayes model on the data
     naive_bayes(big_data)
 
 
