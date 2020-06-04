@@ -24,3 +24,7 @@ To run this function you just need to press the run button or
 type 'python naive_bayes_classifier.py' in the terminal.
 It will save multiple plots into the same directory as the
 file, which visualise the performance of the different models.
+
+scraped_tweets.pickle:
+This pickle contains scraped tweets from twitter users and is
+used in the python file classify_public_figures.py.
