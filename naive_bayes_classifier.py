@@ -15,14 +15,16 @@ def group_data(file_name):
 def naive_bayes(data):
     party = data.loc[:, "Party"]
     tweets = data.loc[:, "Tweet"]
-    tweets_train, tweets_test, party_train, party_test = train_test_split(tweets, party, test_size=0.25)
-    vectorizer = CountVectorizer()
-    classifier = train_bayes(tweets_train, party_train, vectorizer)
-    predictions = classifier.predict(vectorizer.transform(tweets_test))
-    acc = accuracy_score(party_test, predictions)
-    print("Test Accuracy: " + str(acc))
-    matrix_display(party_test, predictions)
-    classify_public_figures(classifier, vectorizer)
+    for i in range(3):
+        test_size = 0.25 + i * 0.05
+        tweets_train, tweets_test, party_train, party_test = train_test_split(tweets, party, test_size=test_size)
+        vectorizer = CountVectorizer()
+        classifier = train_bayes(tweets_train, party_train, vectorizer)
+        predictions = classifier.predict(vectorizer.transform(tweets_test))
+        acc = accuracy_score(party_test, predictions)
+        print("Test Accuracy: " + str(acc))
+        matrix_display(party_test, predictions, test_size)
+    # classify_public_figures(classifier, vectorizer)
 
 def train_bayes(tweets_train, party_train, vectorizer):
     counts = vectorizer.fit_transform(tweets_train.values)
@@ -42,22 +44,9 @@ def save_model(classifier, vectorizer):
     with open('naive_vectorizer.pickle', 'wb') as f:
         pickle.dump(vectorizer, f)
     
-# def classify_public_figures(classifier, vectorizer):
-#     with open('scraped_tweets.pickle', 'rb') as f:
-#         scraped_tweets = pickle.load(f)
-#     pub_figures = scraped_tweets.groupby(["username"])["tweet"].sum().reset_index()
-#     public_figures = pub_figures.iloc[:, 0]
-#     test_tweets = pub_figures.iloc[:, 1]
-#     predictions = classifier.predict(vectorizer.transform(test_tweets))
-#     map = {}
-#     for i in range(len(public_figures)):
-#         map[public_figures[i]] = predictions[i]
-#     print(map)
-
-
-def matrix_display(party_test, predictions):
+def matrix_display(party_test, predictions, test_size):
     '''
-    This function takes true labels and the  predictions from the data
+    This function takes true labels and the predictions from the data
     used to test the naive bayes classifier, and creates a confusion
     matrix showing the accuracy of the classifier.
     '''
@@ -81,7 +70,7 @@ def matrix_display(party_test, predictions):
     for i in range(c_matrix.shape[0]):
         for j in range(c_matrix.shape[1]):
             ax.text(j, i, str(c_matrix[i, j]), ha="center", va="center", color="black")
-    plt.show()
+    plt.savefig("Test Size: " + str(test_size) + ".png")
 
 
 def main():
