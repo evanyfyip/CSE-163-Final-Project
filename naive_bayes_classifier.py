@@ -52,7 +52,7 @@ def naive_bayes(data):
         # generating a vectorizer to handle string inputs
         vectorizer = CountVectorizer()
         # calling function to train model
-        classifier = train_bayes(tweets_train, party_train, vectorizer)
+        classifier = train_bayes(tweets_train, party_train, vectorizer, i)
         predictions = classifier.predict(vectorizer.transform(tweets_test))
         acc = accuracy_score(party_test, predictions)
         accuracy_map[test_size] = acc  # storing the accuracy score
@@ -70,7 +70,7 @@ def naive_bayes(data):
     plt.savefig("accuracy_by_test_size.png")
 
 
-def train_bayes(tweets_train, party_train, vectorizer):
+def train_bayes(tweets_train, party_train, vectorizer, i):
     '''
     This function trains a multinomial naive bayes classifier model.
     It takes training data and training labers, and the vectorizer
@@ -82,7 +82,9 @@ def train_bayes(tweets_train, party_train, vectorizer):
     target = party_train.values
     classifier.fit(counts, target)
     # Writing model to a pickle to save it
-    save_model(classifier, vectorizer)
+    # (only for test size of 0.25)
+    if i == 0:
+        save_model(classifier, vectorizer)
     return classifier
 
 
