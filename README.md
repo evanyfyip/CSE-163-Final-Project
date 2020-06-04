@@ -29,8 +29,12 @@ It also saves the classifier constructed from a 0.25 test-train
 split, as a pickle. This classifier is used in classify_public_figures.py
 
 tweet_scraping_legacy.py:
-???
-
+This file contains functions that scrape tweets from twitter.com from
+various public figures and save these tweets and the usernames of the tweeters
+to a Pandas dataframe in scraped_tweets.pickle. This pickle will be in the
+same directory as tweet_scraping_legacy.py. In order to run this file,
+the BeautifulSoup library must be installed, which is not included in the
+cse163 environment by default. To install, type "pip install bs4" at the terminal.
 
 scraped_tweets.pickle:
 This pickle contains scraped tweets from twitter users and is
