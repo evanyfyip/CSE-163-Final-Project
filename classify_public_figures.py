@@ -17,7 +17,9 @@ def classify_public_figures():
     pub_figures = scraped_tweets.groupby(["username"])["tweet"].sum().reset_index()
     public_figures = pub_figures.iloc[:, 0]
     test_tweets = pub_figures.iloc[:, 1]
-    predictions = classifier.predict(vectorizer.transform(test_tweets))
+    vector = vectorizer.transform(test_tweets)
+    predictions = classifier.predict(vector)
+    print(classifier.predict_proba(vector))
     map = {}
     for i in range(len(public_figures)):
         map[public_figures[i]] = predictions[i]
