@@ -25,6 +25,8 @@ To run this function you just need to press the run button or
 type 'python naive_bayes_classifier.py' in the terminal.
 It will save multiple plots into the same directory as the
 file, which visualise the performance of the different models.
+It also saves the classifier constructed from a 0.25 test-train
+split, as a pickle. This classifier is used in classify_public_figures.py
 
 tweet_scraping_legacy.py:
 ???
