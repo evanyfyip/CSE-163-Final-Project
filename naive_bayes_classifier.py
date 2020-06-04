@@ -21,19 +21,22 @@ def naive_bayes(data):
     accuracy_map = {}
     for i in range(8):
         test_size = round(0.25 + i * 0.1, 2)
-        tweets_train, tweets_test, party_train, party_test = train_test_split(tweets, party, test_size=test_size)
+        tweets_train, tweets_test, party_train,\
+            party_test = train_test_split(tweets, party, test_size=test_size)
         vectorizer = CountVectorizer()
         classifier = train_bayes(tweets_train, party_train, vectorizer)
         predictions = classifier.predict(vectorizer.transform(tweets_test))
         acc = accuracy_score(party_test, predictions)
         accuracy_map[test_size] = acc
         matrix_display(party_test, predictions, test_size)
-        plot_accuracy_bar(party_test, predictions)
-    accuracy_df = pd.DataFrame(list(accuracy_map.items()), columns = ["Test Size", "Accuracy"])
+        plot_accuracy_bar(party_test, predictions, test_size)
+    accuracy_df = pd.DataFrame(list(accuracy_map.items()),
+                               columns=["Test Size", "Accuracy"])
     print(accuracy_df)
     sns.relplot(x="Test Size", y="Accuracy", data=accuracy_df)
     plt.title("Accuracy vs. Test Size")
     plt.savefig("accuracy_by_test_size.png")
+
 
 def train_bayes(tweets_train, party_train, vectorizer):
     counts = vectorizer.fit_transform(tweets_train.values)
@@ -56,7 +59,8 @@ def save_model(classifier, vectorizer):
         pickle.dump(classifier, f)
     with open('naive_vectorizer.pickle', 'wb') as f:
         pickle.dump(vectorizer, f)
-    
+
+
 def matrix_display(party_test, predictions, test_size):
     '''
     This function takes true labels and the predictions from the data
@@ -70,23 +74,25 @@ def matrix_display(party_test, predictions, test_size):
     # generate the plot
     fig = plt.figure(figsize=(7, 7))
     ax = fig.add_subplot(111)
-    plt.title('Naive Bayes Model Confusion Matrix')
-    ax.set_xticklabels([''] + party_labels) 
+    plt.title('Naive Bayes Model Confusion Matrix test-size '
+              + '(' + str(test_size) + ')')
+    ax.set_xticklabels([''] + party_labels)
     ax.set_yticklabels([''] + party_labels)
-    ax.ylabel ='True Party'
-    ax.xlabel ='Models Predicted Party'
-    image = ax.matshow(c_matrix, cmap='BuPu')
+    ax.ylabel = 'True Party'
+    ax.xlabel = 'Models Predicted Party'
+    ax.matshow(c_matrix, cmap='BuPu')
     plt.xlabel('Predicted Party')
     plt.ylabel('Actual Party')
 
     # place text for the number of correct and incorrect predictions
     for i in range(c_matrix.shape[0]):
         for j in range(c_matrix.shape[1]):
-            ax.text(j, i, str(c_matrix[i, j]), ha="center", va="center", color="black")
+            ax.text(j, i, str(c_matrix[i, j]), ha="center",
+                    va="center", color="black")
     plt.savefig("test_size_" + str(test_size) + ".png")
 
 
-def plot_accuracy_bar(party_test, predictions):
+def plot_accuracy_bar(party_test, predictions, test_size):
     """
     Saves and plots the accuracy bar plot of
     the test data and the political affiliation predictions.
@@ -136,7 +142,8 @@ def plot_accuracy_bar(party_test, predictions):
     # Add some text for labels, title and custom x-axis tick labels, etc.
     ax.set_ylabel('Tweets')
     ax.set_xlabel('Political affiliation')
-    ax.set_title('Naive Bayes model political affiliation prediction accuracy')
+    ax.set_title('NB model political prediction accuracy bar test-size '
+                 + '(' + str(test_size) + ')')
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
     ax.legend(loc='upper right')
@@ -146,9 +153,9 @@ def plot_accuracy_bar(party_test, predictions):
     # setting layout
     fig.tight_layout()
 
-    plt.show()
+    # plt.show()
     # Saving the figure
-    fig.savefig('Political_affiliation_accuracy_bar.png')
+    fig.savefig('bar_accuracy_' + str(test_size) + '.png')
 
 
 def autolabel(rects, ax):
@@ -175,6 +182,7 @@ def main():
     extracted_tweets = pd.read_csv('ExtractedTweets.csv')
     big_data = group_data(extracted_tweets)
     naive_bayes(big_data)
+
 
 if __name__ == "__main__":
     main()
