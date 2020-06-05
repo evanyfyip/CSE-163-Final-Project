@@ -93,6 +93,8 @@ def main():
     tweets = get_all_tweets(usernames)
 
     # Save a pickle of the value. Need to open file in write-binary mode (wb)
+    # Note: filename is changed to scraped_tweets_test to prevent overwriting
+    # existing scraped_tweets.pickle that contains the working dataframe.
     with open('scraped_tweets_test.pickle', 'wb') as f:
         pickle.dump(tweets, f)
 
