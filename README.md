@@ -1,4 +1,4 @@
-### CSE-163-Final-Project
+# CSE-163-Final-Project
 
 Predicting Political Affiliation using tweets
 Group Members:
@@ -10,7 +10,7 @@ Files: ExtractedTweets.csv, naive_bayes_classifier.py,
 classify_public_figures.py, scraped_tweets.pickle,
 tweet_scraping_legacy.py
 
-**NOTE**
+## **NOTE**
 This specification assumes the user has the standard cse163 environment.
 
 ExtractedTweets.csv:
