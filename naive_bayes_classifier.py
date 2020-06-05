@@ -60,7 +60,8 @@ def naive_bayes(data):
         # generating a vectorizer to handle string inputs
         vectorizer = CountVectorizer()
         # calling function to train model
-        classifier = train_bayes(tweets_train, party_train, vectorizer, test_size)
+        classifier = train_bayes(tweets_train, party_train,
+                                 vectorizer, test_size)
         predictions = classifier.predict(vectorizer.transform(tweets_test))
         acc = accuracy_score(party_test, predictions)
         accuracy_map[test_size] = acc  # storing the accuracy score
