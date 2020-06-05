@@ -16,7 +16,9 @@ This specification assumes the user has the standard cse163 environment.
 ExtractedTweets.csv:
 CSV file containing extracted tweets from select politicians.
 It has three columns: handle, party, and tweet. The dataset was
-taken from Kaggle. It is imported in naive_bayes_classifier.py
+taken from Kaggle (https://www.kaggle.com/kapastor/democratvsrepublicantweets/version/3),
+where it can be easily downloaded.
+It is imported in naive_bayes_classifier.py
 so it must be located in the same directory.
 
 naive_bayes_classifier.py:
