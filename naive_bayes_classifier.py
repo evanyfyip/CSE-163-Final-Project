@@ -93,7 +93,7 @@ def naive_bayes(data):
     # plotting accuracy scores of models by their test size
     sns.relplot(x="Test Size", y="Accuracy", data=accuracy_df)
     plt.title("Accuracy vs. Test Size")
-    plt.savefig("accuracy_by_test_size.png")
+    plt.savefig("accuracy_by_test_size.png", bbox_inches="tight")
 
 
 def train_bayes(tweets_train, party_train, vectorizer, test_size):
