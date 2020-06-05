@@ -204,8 +204,8 @@ def plot_accuracy_bar(party_test, predictions, test_size, ax):
     # and dem_F (prediction = false)
     dem_T = len(correct_dem)
     rep_T = len(correct_rep)
-    dem_F = len(all_reps) - dem_T
-    rep_F = len(all_dems) - dem_T
+    dem_F = len(all_dems) - dem_T
+    rep_F = len(all_reps) - rep_T
 
     # labels and heights for bar plot
     labels = ['Democrat', 'Republican']
