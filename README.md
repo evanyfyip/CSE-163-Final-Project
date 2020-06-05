@@ -52,6 +52,11 @@ scraped_tweets.pickle:
 This pickle contains scraped tweets from twitter users and is
 used in the python file classify_public_figures.py.
 
+naive_classifier.pickle:
+This pickle contains the Naive Bayes Classifier we produced in naive_bayes_classifier.py,
+taken from the model of test size 0.25. The model saved in this pickle is used in
+classify_public_figures.py to predict the politicial sentiment of public figures.
+
 classify_public_figures.py:
 This file runs the previously constructed multinomial Naive Bayes
 model on the scraped tweets from scraped_tweets.pickle, and
