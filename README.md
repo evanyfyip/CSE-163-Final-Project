@@ -57,6 +57,13 @@ This pickle contains the Naive Bayes Classifier we produced in naive_bayes_class
 taken from the model of test size 0.25. The model saved in this pickle is used in
 classify_public_figures.py to predict the politicial sentiment of public figures.
 
+naive_vectorizer.pickle:
+This pickle contains the vectorizer object we used to fit our string data of tweets
+when training the classifier. We save it into a pickle that is later read and used
+when classifying public figures. This is important to help our model maintain consistency
+and function. The pickle should be saved to the svae directory as
+classify_public_figures.py
+
 classify_public_figures.py:
 This file runs the previously constructed multinomial Naive Bayes
 model on the scraped tweets from scraped_tweets.pickle, and
